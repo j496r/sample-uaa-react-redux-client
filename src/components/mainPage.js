@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import { loadDataStart, loadDataSuccess } from "../actions";
-import { loadData } from "../utils/api";
+import { loadDataStartActionCreator, loadDataSuccessActionCreator } from "../actions";
+import { requestDataFromApi } from "../utils/api";
 import ReactJson from "react-json-view";
 import Spinner from "react-spinkit";
 
 class MainPage extends React.Component {
   componentWillMount() {
-    this.props.dispatch(loadDataStart());
-    loadData(this.props.conf.serverUrl + "/env").then(result => {
-      this.props.dispatch(loadDataSuccess(result));
+    this.props.dispatch(loadDataStartActionCreator());
+    requestDataFromApi(this.props.conf.serverUrl + "/env").then(result => {
+      this.props.dispatch(loadDataSuccessActionCreator(result));
     });
   }
 
@@ -48,6 +48,8 @@ const styles = {
 
 function mapStateToProps(state) {
   return {
+    // WTF happend here?? I can not find where we got all these nested data and conf
+    // TODO: figure it out
     data: state.data.data.data,
     conf: state.conf.conf.data
   };

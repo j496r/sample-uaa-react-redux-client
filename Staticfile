@@ -1,2 +1,3 @@
+# staticfile used by cloudfoundry, this line should remove "#" ending up in paths 
 pushstate: enabled
 

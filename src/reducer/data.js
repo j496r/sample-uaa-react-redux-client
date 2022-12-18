@@ -5,7 +5,7 @@ const initialState = {
   data: {}
 };
 
-export default function reducer(state = initialState, action) {
+export default function dataReducer(state = initialState, action) {
   switch (action.type) {
     case SESSION_TERMINATED:
     case USER_EXPIRED:

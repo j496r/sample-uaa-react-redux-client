@@ -1,43 +1,36 @@
-var fs = require("fs");
+// Backend server hosting the react application
+// Changed it to http server, and removed dead "silent_renew" part
 var http = require("http");
-var https = require("https");
-var privateKey = fs.readFileSync(__dirname + "/key.pem", "utf8");
-var certificate = fs.readFileSync(__dirname + "/cert.pem", "utf8");
 var path = require("path");
 
-var credentials = { key: privateKey, cert: certificate };
 var express = require("express");
 var app = express();
 
 app.set("port", process.env.PORT || 9090);
 
 app.use(function(req, res, next) {
-  if (path.extname(req.path).length > 0) {
-    next();
-  } else if (path.dirname(req.path).indexOf("silent_renew") > -1) {
-    req.url = "/silent_renew.html";
-    next();
-  } else {
+  if (path.extname(req.path).length <= 0) {
     req.url = "/index.html";
-    next();
   }
+  next();
 });
 
-app
-  .use(express.static(__dirname + "/dist"))
-  .get("/", function(req, res) {
+// I do not see how this all can work without something like this:
+app.get("/conf.json", (req, res) => {
+  res.sendFile(__dirname + "/public/conf.json");
+});
+
+// Serve files automatically from "dist" folder
+app.use(express.static(__dirname + "/dist"));
+
+// This part is probably to over do it... we already serve the static parts in dist
+app.get("/", function(req, res) {
     res.sendFile("index.html", {
-      root: __dirname + "/dist"
-    });
-  })
-  .get("/silent_renew.html", function(req, res) {
-    res.sendFile("silent_renew.html", {
       root: __dirname + "/dist"
     });
   });
 
-var httpsServer = https.createServer(credentials, app);
-
-httpsServer.listen(app.get("port"), function() {
+var httpServer = http.createServer(app);
+httpServer.listen(app.get("port"), function() {
   console.log("The server is listening on port", app.get("port"));
 });

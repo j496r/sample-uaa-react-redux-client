@@ -6,13 +6,14 @@ const initialState = {
   usermanager: {}
 };
 
-export default function reducer(state = initialState, action) {
+export default function configurationReducer(state = initialState, action) {
   switch (action.type) {
     case LOAD_CONF_SUCCESS:
-      return Object.assign({}, state, {
+      newState = Object.assign({}, state, {
         conf: action.payload,
         usermanager: userManager(action.payload.data)
       });
+      return newState;
     default:
       return state;
   }

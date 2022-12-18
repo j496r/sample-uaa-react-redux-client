@@ -1,3 +1,5 @@
+// Webpack is being used to bundle the JavaScript code in the src 
+// directory into a single file that is saved in the dist directory. 
 var fs = require("fs");
 var path = require("path");
 var webpack = require("webpack");
